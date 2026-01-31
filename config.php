@@ -6,7 +6,7 @@ error_reporting(E_ALL);
 if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
-const ROOT_DIR = __DIR__ . '/..';
+const ROOT_DIR = __DIR__ . '/php_project';
 const INCLUDES_DIR = ROOT_DIR . '/includes';
 const DATA_DIR = ROOT_DIR . '/data';
 const TASKS_FILE = DATA_DIR . '/tasks.json';

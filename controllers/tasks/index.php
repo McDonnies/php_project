@@ -1,11 +1,15 @@
 <?php
-require_once __DIR__ . '/includes/config.php';
-require_once INCLUDES_DIR.'/functions.php';
-require_once INCLUDES_DIR.'/header.php';
-require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/TaskGateway.php';
+
 use App\Database;
 use App\TaskGateway;
+require_once basePath('includes/header.php');
+require_once basePath('TaskGateway.php');
+require_once basePath('Database.php');
+$database = new Database();
+$db = $database->getConnection();
+
+$gateway = new TaskGateway($db);
+$tasks = $gateway->getAll();
 if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>Success!</strong> Task created.
@@ -20,18 +24,13 @@ if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
 <?php endif; ?>
     <div class ="d-flex justify-content-between align-items-center mb-4">
         <h1 class="m-0">Task list</h1>
-        <a href="create.php" class="btn btn-primary btn-sm">
+        <a href="/create" class="btn btn-primary btn-sm">
             + New task
         </a>
     </div>
     <div class="list-group">
     <?php
 
-    $database = new Database();
-    $db = $database->getConnection();
-
-    $gateway = new TaskGateway($db);
-    $tasks = $gateway->getAll();
     foreach ($tasks as $task):
         $safe_id = e($task['id']);
         $safe_title = e($task['title']);
@@ -44,18 +43,18 @@ if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
         <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
 
             <div class="d-flex align-items-center flex-grow-1">
-                <a href="toggle_task.php?id=<?= $safe_id ?>"
+                <a href="/task/toggle?id=<?= $safe_id ?>"
                    class="btn <?= $btn_class ?> btn-sm me-3 d-flex align-items-center justify-content-center"
                    style="width: 32px; height: 32px; border-radius: 50%;">
                     <i class="bi <?= $icon_class ?>"></i>
                 </a>
 
-                <a href="task.php?id=<?= $safe_id ?>" class="text-decoration-none text-dark flex-grow-1">
+                <a href="/task?id=<?= $safe_id ?>" class="text-decoration-none text-dark flex-grow-1">
                     <span class="<?= $text_style ?>"><?= $safe_title ?></span>
                 </a>
             </div>
 
-            <a href="delete_task.php?id=<?= $safe_id ?>"
+            <a href="/task/destroy?id=<?= $safe_id ?>"
                class="btn btn-outline-danger btn-sm ms-2"
                onclick="return confirm('Confirm delete?');">
                 <i class="bi bi-trash"></i>
@@ -64,4 +63,4 @@ if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
         </div>
     <?php endforeach; ?>
     </div>
-<?php require_once INCLUDES_DIR.'/footer.php'; ?>
+<?php require_once basePath('includes/footer.php'); ?>

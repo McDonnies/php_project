@@ -1,13 +1,10 @@
 <?php
-require_once __DIR__ . '/includes/config.php';
-require_once INCLUDES_DIR.'/functions.php';
-require_once INCLUDES_DIR.'/header.php';
-
-require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/TaskGateway.php';
-
 use App\Database;
 use App\TaskGateway;
+require_once basePath('includes/header.php');
+require_once basePath('TaskGateway.php');
+require_once basePath('Database.php');
+
 if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $title = trim($_POST['title']);
     $description = trim($_POST['description']);
@@ -19,8 +16,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST') {
     $db = $database->getConnection();
     $gateway = new TaskGateway($db);
     $gateway->create($title, $description, $status);
-    redirect('index.php?success=1');
+    redirect('/?success=1');
 }
 
 
-redirect('create.php');
+redirect('/create');

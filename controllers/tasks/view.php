@@ -1,11 +1,11 @@
-<?php require_once __DIR__ . '/includes/config.php';
-require_once INCLUDES_DIR.'/functions.php';
-require_once INCLUDES_DIR.'/header.php';
-require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/TaskGateway.php';
-
+<?php
 use App\Database;
 use App\TaskGateway;
+
+require_once basePath('includes/header.php');
+require_once basePath('TaskGateway.php');
+require_once basePath('Database.php');
+
 $current_id = (int)($_GET['id'] ?? 0);
 $database = new Database();
 $db = $database->getConnection();
@@ -14,8 +14,7 @@ $gateway = new TaskGateway($db);
 $task = $gateway->getById($current_id);
 
 if ($task === null) {
-    header('Location: index.php?error=not_found');
-    exit;
+    redirect('/error/not_found');
 }
 
     $title = e($task['title']);
@@ -35,8 +34,8 @@ if ($task === null) {
                     </span>
                 </p>
                 <p class="card-text"> <?= $description ?></p>
-                <a href="index.php" class="btn btn-primary mt-3">Назад к списку</a>
+                <a href="/" class="btn btn-primary mt-3">Back to the list.</a>
             </div>
         </div>
 
-<?php require_once INCLUDES_DIR.'/footer.php'; ?>
+<?php require_once basePath('includes/footer.php'); ?>

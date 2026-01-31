@@ -1,9 +1,7 @@
 <?php
-require_once __DIR__ . '/includes/config.php';
-require_once __DIR__ . '/includes/functions.php';
-
-require_once __DIR__ . '/Database.php';
-require_once __DIR__ . '/TaskGateway.php';
+require_once basePath('includes/header.php');
+require_once basePath('TaskGateway.php');
+require_once basePath('Database.php');
 
 use App\Database;
 use App\TaskGateway;
@@ -18,5 +16,4 @@ if ($id) {
     $gateway->delete($id);
 }
 
-// Уходим обратно
-redirect('index.php');
+redirect('/');

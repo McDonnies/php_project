@@ -1,7 +1,6 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
-<?php require_once INCLUDES_DIR.'/functions.php'; ?>
-<?php require_once INCLUDES_DIR.'/header.php'; ?>
 <?php
+require_once basePath('includes/header.php');
+
 $old_title = '';
 $old_desc = '';
 $old_status = '';
@@ -31,7 +30,7 @@ $old_status = '';
                 <h1 class = "h3"> Создать новую задачу </h1>
             </div>
             <div class = "card-body">
-                <form action="save_task.php" method="POST">
+                <form action="/store" method="POST">
                     <div class="mb-3"><label for = "taskName" class = "form-label">Название задачи:</label>
                         <input id = "taskName" type = "text" name = "title" class = "form-control" value = "<?= e($old_title)?>" required>
 
@@ -54,7 +53,7 @@ $old_status = '';
                         </select>
                     </div>
                     <div class = "d-flex justify-content-center">
-                        <a href="index.php" class="btn btn-outline-secondary">Отмена</a>
+                        <a href="/index" class="btn btn-outline-secondary">Отмена</a>
                         <button type="submit" class = "btn btn-primary">Отправить</button>
                     </div>
                 </form>
@@ -64,6 +63,5 @@ $old_status = '';
 </div>
 
 
-<?php require_once INCLUDES_DIR.'/footer.php'; ?>
-
+<?php require_once basePath('includes/footer.php'); ?>
 

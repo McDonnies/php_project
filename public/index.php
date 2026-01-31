@@ -1,0 +1,6 @@
+<?php
+
+const BASE_PATH = __DIR__ . '/../';
+require_once BASE_PATH . 'includes/functions.php';
+require_once basePath('config.php');
+require_once basePath('router.php');
