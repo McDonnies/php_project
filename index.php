@@ -1,40 +1,67 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
-<?php require_once INCLUDES_DIR.'/functions.php'; ?>
-<?php require_once INCLUDES_DIR.'/header.php'; ?>
-
-<?php if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
+<?php
+require_once __DIR__ . '/includes/config.php';
+require_once INCLUDES_DIR.'/functions.php';
+require_once INCLUDES_DIR.'/header.php';
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/TaskGateway.php';
+use App\Database;
+use App\TaskGateway;
+if (isset($_GET['success']) && $_GET['success'] == '1'): ?>
     <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <strong>Ура!</strong> Задача успешно создана.
+        <strong>Success!</strong> Task created.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
 <?php if (isset($_GET['error']) && $_GET['error'] === 'not_found'): ?>
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>Ошибка!</strong> Запрашиваемая задача не найдена.
+        <strong>Error!</strong> Task not found.
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 <?php endif; ?>
     <div class ="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="m-0">Список задач</h1>
+        <h1 class="m-0">Task list</h1>
         <a href="create.php" class="btn btn-primary btn-sm">
-            + Новая задача
+            + New task
         </a>
     </div>
     <div class="list-group">
-        <?php
-        $tasks = getTasks();
-        foreach ($tasks as $task):
-            $safe_id = e($task['id']);
-            $safe_title = e($task['title']);
-            $safe_status = e($task['status']);
+    <?php
 
-            $color = getStatusColor($task['status']);
-            ?>
-    <a href="task.php?id=<?= $safe_id ?>"
-       class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-        <span class="fw-bold"><?= $safe_title ?></span>
-        <span class="badge bg-<?= $color ?>"> <?= $safe_status ?></span>
-    </a>
-        <?php endforeach; ?>
+    $database = new Database();
+    $db = $database->getConnection();
+
+    $gateway = new TaskGateway($db);
+    $tasks = $gateway->getAll();
+    foreach ($tasks as $task):
+        $safe_id = e($task['id']);
+        $safe_title = e($task['title']);
+        $safe_status = e($task['status']);
+        $text_style = ($task['status'] === 'done') ? 'text-decoration-line-through text-muted' : 'fw-bold';
+        $btn_class = ($task['status'] === 'done') ? 'btn btn-success' : 'btn btn-danger';
+        $icon_class = ($task['status'] === 'done') ? 'bi-check-lg' : 'bi-circle';
+        $color = getStatusColor($task['status']);
+        ?>
+        <div class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+
+            <div class="d-flex align-items-center flex-grow-1">
+                <a href="toggle_task.php?id=<?= $safe_id ?>"
+                   class="btn <?= $btn_class ?> btn-sm me-3 d-flex align-items-center justify-content-center"
+                   style="width: 32px; height: 32px; border-radius: 50%;">
+                    <i class="bi <?= $icon_class ?>"></i>
+                </a>
+
+                <a href="task.php?id=<?= $safe_id ?>" class="text-decoration-none text-dark flex-grow-1">
+                    <span class="<?= $text_style ?>"><?= $safe_title ?></span>
+                </a>
+            </div>
+
+            <a href="delete_task.php?id=<?= $safe_id ?>"
+               class="btn btn-outline-danger btn-sm ms-2"
+               onclick="return confirm('Confirm delete?');">
+                <i class="bi bi-trash"></i>
+            </a>
+
+        </div>
+    <?php endforeach; ?>
     </div>
 <?php require_once INCLUDES_DIR.'/footer.php'; ?>

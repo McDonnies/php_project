@@ -1,31 +1,26 @@
-<?php require_once __DIR__ . '/includes/config.php'; ?>
-<?php require_once INCLUDES_DIR.'/functions.php'; ?>
-<?php require_once INCLUDES_DIR.'/header.php'; ?>
 <?php
-$title = isset($_POST['title']) ? trim($_POST['title']) : '';
-$description = isset($_POST['description']) ? trim($_POST['description']) : '';
-$status = $_POST['status'] ?? "Новая задача";
+require_once __DIR__ . '/includes/config.php';
+require_once INCLUDES_DIR.'/functions.php';
+require_once INCLUDES_DIR.'/header.php';
 
-if ($title === '') {
-    $_SESSION['old_data'] = [
-        'status' => $status,
-        'title' => $title,
-        'description' => $description,
-    ];
-    header('Location: create.php?error=empty');
-    exit;
+require_once __DIR__ . '/Database.php';
+require_once __DIR__ . '/TaskGateway.php';
+
+use App\Database;
+use App\TaskGateway;
+if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $title = trim($_POST['title']);
+    $description = trim($_POST['description']);
+    $status = $_POST['status'];
+    if (empty($title) || empty($description) || empty($status)) {
+        redirect('create.php?error=empty_fields');
+    }
+    $database = new Database();
+    $db = $database->getConnection();
+    $gateway = new TaskGateway($db);
+    $gateway->create($title, $description, $status);
+    redirect('index.php?success=1');
 }
-if (taskExists($title)) {
-    $_SESSION['old_data'] = [
-        'status' => $status,
-        'title' => $title,
-        'description' => $description,
-    ];
-    header('Location: create.php?error=duplicate');
-    exit;
-}
-addTask($title, $description, $status);
-header('Location: index.php?success=1');
-exit;
 
 
+redirect('create.php');
