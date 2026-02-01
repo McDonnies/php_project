@@ -1,9 +1,8 @@
 <?php
-use App\Database;
-use App\TaskGateway;
+
+use core\Database;
 
 require_once basePath('TaskGateway.php');
-require_once basePath('Database.php');
 
 $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
 

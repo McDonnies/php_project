@@ -1,10 +1,9 @@
 <?php
 
-use App\Database;
-use App\TaskGateway;
+use core\Database;
+
 require_once basePath('includes/header.php');
 require_once basePath('TaskGateway.php');
-require_once basePath('Database.php');
 $database = new Database();
 $db = $database->getConnection();
 

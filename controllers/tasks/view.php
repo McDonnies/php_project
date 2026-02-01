@@ -1,10 +1,10 @@
 <?php
-use App\Database;
-use App\TaskGateway;
+
+use core\Database;
+use core\Response;
 
 require_once basePath('includes/header.php');
 require_once basePath('TaskGateway.php');
-require_once basePath('Database.php');
 
 $current_id = (int)($_GET['id'] ?? 0);
 $database = new Database();
@@ -13,8 +13,8 @@ $gateway = new TaskGateway($db);
 
 $task = $gateway->getById($current_id);
 
-if ($task === null) {
-    redirect('/error/not_found');
+if (! $task) {
+    abort(Response::NOT_FOUND);
 }
 
     $title = e($task['title']);
@@ -28,13 +28,13 @@ if ($task === null) {
             </div>
             <div class="card-body">
                 <p>
-                    <strong>Статус:</strong>
+                    <strong>Status:</strong>
                     <span class = "badge bg-<?=$color?>">
                         <?=$status?>
                     </span>
                 </p>
                 <p class="card-text"> <?= $description ?></p>
-                <a href="/" class="btn btn-primary mt-3">Back to the list.</a>
+                <a href="/" class="btn btn-primary mt-3">Back to the list</a>
             </div>
         </div>
 

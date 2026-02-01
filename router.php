@@ -1,5 +1,5 @@
 <?php
-
+use Core\Response;
 $routes = require basePath('routes.php');
 
 function routeToController($uri, $routes): void
@@ -11,10 +11,10 @@ function routeToController($uri, $routes): void
     }
 }
 
-function abort($code = 404)
+function abort($code = Response::NOT_FOUND): void
 {
     http_response_code($code);
-    require basePath("views/{$code}.php");
+    require basePath("views/$code.php");
     die();
 }
 

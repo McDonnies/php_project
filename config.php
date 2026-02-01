@@ -13,7 +13,7 @@ const TASKS_FILE = DATA_DIR . '/tasks.json';
 
 // ...
 const ALLOWED_STATUSES = [
-    'Новая' => 'primary',
-    'В работе' => 'warning',
-    'Выполнена' => 'success',
+    'New' => 'primary',
+    'In progress' => 'warning',
+    'Completed' => 'success',
 ];
